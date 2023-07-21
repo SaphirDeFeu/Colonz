@@ -70,7 +70,6 @@ public class InventoryManagement : MonoBehaviour {
                         Debug.LogError("Unknown resource type collection");
                         break;
                 }
-                Debug.Log(amount+"\namount of coal:"+inventory["coal"]+"\nwood amount:"+inventory["wood"]);
             }
         } else {
             // do stuff

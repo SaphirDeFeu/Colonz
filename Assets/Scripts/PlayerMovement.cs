@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
 
@@ -12,7 +11,7 @@ public class PlayerMovement : MonoBehaviour {
     public bool hasBoat = false;
     public Vector3 spawnpoint = new Vector3(0f, 0f, 0f);
 
-    public TextMeshProUGUI loadText;
+    public static Collider2D colliderCurrentlyIn;
 
     private char[] movKeys = { 'w', 'a', 's', 'd' };
     private Vector3 currentPosBeforeEnter;
@@ -22,22 +21,32 @@ public class PlayerMovement : MonoBehaviour {
     private int forbiddenCounter = 0;
     private bool canForbidCounterCount = false;
 
+    private Vector2 movement;
+
     // Start is called before the first frame update
     void Start() {
         movementKeys = movementKeys.ToLower();
         movKeys = movementKeys.ToCharArray();
-        loadText.text = "";
         transform.position = spawnpoint;
         Debug.Log("PlayerMovement.cs successfully loaded!");
     }
 
+    public void OnMoveHorizontal(InputValue value) {
+        Vector2 input = value.Get<Vector2>();
+        movement.x = input.x;
+    }
+
+    public void OnMoveVertical(InputValue value) {
+        Vector2 input = value.Get<Vector2>();
+        movement.y = input.y;
+    }
+
+    void OnBoatToggle() {
+        hasBoat = !hasBoat;
+    }
+
     // Update is called once per frame
     void Update() {
-        bool u = Input.GetKey(movKeys[0].ToString());
-        bool l = Input.GetKey(movKeys[1].ToString());
-        bool d = Input.GetKey(movKeys[2].ToString());
-        bool r = Input.GetKey(movKeys[3].ToString());
-        bool hasBoatToggle = Input.GetKey("h");
 
         if(canForbidCounterCount) {
             Debug.LogWarning("Player might be blocked inside inaccessible collider!");
@@ -49,29 +58,9 @@ public class PlayerMovement : MonoBehaviour {
                 canForbidCounterCount = false;
             }
         }
-
-        if(hasBoatToggle) {
-            hasBoat = !hasBoat;
-        }
-        
-        float h = 0;
-        float v = 0;
-
-        if(u) {
-            v = 1;
-        }
-        if(d) {
-            v -= 1;
-        }
-        if(l) {
-            h = -1;
-        }
-        if(r) {
-            h += 1;
-        }
         
         if(canGo) {
-            rb.MovePosition(rb.transform.position + ( ( new Vector3(h, v, 0) ).normalized * speed * Time.deltaTime ) );
+            rb.MovePosition(rb.transform.position + ( ( new Vector3(movement.x, movement.y, 0) ).normalized * speed * Time.deltaTime ) );
         } else {
             transform.position = currentPosBeforeEnter;
         }
@@ -80,6 +69,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
+        colliderCurrentlyIn = other;
         currentPosAfterEnter = transform.position;
 
         switch(other.tag) {
@@ -93,12 +83,19 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void OnTriggerExit2D(Collider2D other) {
+        colliderCurrentlyIn = null;
         canForbidCounterCount = false;
         forbiddenCounter = 0;
         switch(other.tag) {
             case "NeedsBoat":
                 canGo = true;
                 break;
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D other) {
+        if(colliderCurrentlyIn == null) {
+            colliderCurrentlyIn = other;
         }
     }
 

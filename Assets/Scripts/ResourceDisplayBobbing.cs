@@ -11,7 +11,7 @@ public class ResourceDisplayBobbing : MonoBehaviour {
     private float bobbingDirection = 1.0f;
 
     private int counterBeforeNextBob = 0;
-    private int maxCounter = 20;
+    private int maxCounter = 30;
 
     // Start is called before the first frame update
     void Start() {

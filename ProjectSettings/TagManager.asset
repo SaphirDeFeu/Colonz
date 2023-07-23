@@ -8,6 +8,7 @@ TagManager:
   - RES_C-2
   - RES_Wd-3
   - RES_Fe-3
+  - Resource
   layers:
   - Default
   - TransparentFX

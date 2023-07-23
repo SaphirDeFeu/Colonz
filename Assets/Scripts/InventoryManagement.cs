@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class InventoryManagement : MonoBehaviour {
@@ -10,7 +11,7 @@ public class InventoryManagement : MonoBehaviour {
     public TextMeshProUGUI ironAmount;
     public TextMeshProUGUI woodAmount;
 
-    private bool hasLeftClicked = false;
+    private bool hasFired = false;
     private Dictionary<string, float> inventory = new Dictionary<string, float>();
 
     private Collider2D withinCollider = null;
@@ -25,18 +26,14 @@ public class InventoryManagement : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        hasLeftClicked = false;
-        if(Input.GetMouseButtonDown(0) && !hasLeftClicked) {
-            hasLeftClicked = true;
-        }
-        if(withinCollider != null && hasLeftClicked) {
-            if((withinCollider.tag).StartsWith("RES_")) {
-                attack(withinCollider);
+        if(withinCollider != null && hasFired) {
+            if(withinCollider.tag == "Resource") {
+                Attack(withinCollider);
             }
         }
 
-        if(hasLeftClicked && withinCollider == null) {
-            attack(null);
+        if(hasFired && withinCollider == null) {
+            Attack(null);
         }
     }
 
@@ -48,11 +45,19 @@ public class InventoryManagement : MonoBehaviour {
         withinCollider = null;
     }
 
-    void attack(Collider2D other) {
+    public void OnFire(InputValue value) {
+        hasFired = true;
+    }
+
+    void LateUpdate() {
+        hasFired = false;
+    }
+
+    void Attack(Collider2D other) {
         if(other != null) {
-            if((other.tag).StartsWith("RES_")) {
-                string type = DisplayResource.GetResTypeFromTag(other.tag);
-                float amount = ((float)getResAmountFromTag(other.tag)) / 4.0f;
+            if(other.tag == "Resource") {
+                string type = DisplayResource.GetResTypeFromName(other);
+                float amount = ((float)GetResAmountFromName(other)) / 4.0f;
                 switch(type) {
                     case "C":
                         inventory["coal"] += amount;
@@ -76,10 +81,12 @@ public class InventoryManagement : MonoBehaviour {
         }
     }
 
-    public static int getResAmountFromTag(string tag) {
-        if (tag.StartsWith("RES_") && tag.Length >= 6) {
+    public static int GetResAmountFromName(Collider2D other) {
+        string name = other.name;
+        string tag = other.tag;
+        if (tag == "Resource") {
             // Get the last character of the tag
-            char lastChar = tag[tag.Length - 1];
+            char lastChar = name[name.Length - 1];
 
             // Try to parse the last character into an integer
             if (int.TryParse(lastChar.ToString(), out int result)) {

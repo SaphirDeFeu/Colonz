@@ -10,8 +10,10 @@ public class DisplayResource : MonoBehaviour {
     public Sprite coal;
     public Sprite iron;
     public Sprite wood;
+    
+    public static Vector3 displayCoords;
 
-    private string bc = "RES_";
+    private string bc = "Resource";
 
     // Start is called before the first frame update
     void Start() {
@@ -24,10 +26,10 @@ public class DisplayResource : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D other) {
-        if((other.tag).StartsWith(bc)) {
+        if(other.tag == bc) {
             resourceDisplayer.SetActive(true);
 
-            string resType = GetResTypeFromTag(other.tag);
+            string resType = GetResTypeFromName(other);
 
             if (!string.IsNullOrEmpty(resType)) {
                 // Retrieve absolute coordinates to position the sprite correctly
@@ -40,7 +42,7 @@ public class DisplayResource : MonoBehaviour {
     }
 
     void OnTriggerExit2D(Collider2D other) {
-        if((other.tag).StartsWith(bc)) {
+        if(other.tag == bc) {
             resourceDisplayer.SetActive(false);
         }
     }
@@ -62,15 +64,15 @@ public class DisplayResource : MonoBehaviour {
                 break;
         }
         resourceDisplayer.transform.position = coordinates;
+        displayCoords = transform.position;
     }
 
-    public static string GetResTypeFromTag(string tag) {
-        // Assuming the tag format is "RES_xx-x", where xx can be one to three letters representing the ore type.
-        // Extract the substring after "RES_" and before the last dash "-" to get the ore type.
-        int startIndex = 4; // After "RES_"
-        int endIndex = tag.LastIndexOf('-');
+    public static string GetResTypeFromName(Collider2D collider) {
+        string name = collider.name;
+        int startIndex = 0;
+        int endIndex = name.LastIndexOf('-');
         if (endIndex > startIndex && endIndex <= startIndex + 3) {
-            return tag.Substring(startIndex, endIndex - startIndex);
+            return name.Substring(startIndex, endIndex - startIndex);
         }
 
         return null; // Failed to extract ore type.

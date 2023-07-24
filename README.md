@@ -11,5 +11,6 @@ Produit par TSM Studios, un groupe dont sont membres :
 Veuillez lire la LICENSE avant de fork ou d'utiliser ce repo. Vous pouvez trouver les sorties officielles du jeu dans la section Releases
 
 ## En développement
-Des changements peuvent arriver à tout moment au jeu. Veuillez garder l'oeil ouvert pour les modifications.
+Des changements peuvent arriver à tout moment au jeu. Veuillez garder l'oeil ouvert pour les modifications.  
+  
 Si vous désirez trouver la version actuelle de développement du jeu, allez au fichier présent à : `/ProjectSettings/ProjectSettings.asset` et cherchez pour le field `bundleVersion: <version>`

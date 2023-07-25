@@ -22,6 +22,7 @@ public class InventoryManagement : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        // Setup l'inventaire, on assume que c'est une nouvelle partie
         inventory.Add("coal", 0.0f);
         inventory.Add("iron", 0.0f);
         inventory.Add("wood", 0.0f);
@@ -30,14 +31,15 @@ public class InventoryManagement : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // À chaque fois que le joueur clique sur la souris
         if(withinCollider != null && hasFired) {
             if(withinCollider.tag == "Resource") {
-                Attack(withinCollider);
+                Attack(withinCollider); // Check si le collider où on est est une ressource et le faire passer comme collider d'attaque
             }
         }
 
         if(hasFired && withinCollider == null) {
-            Attack(null);
+            Attack(null); // Si on est pas dans un trigger alors on attaque du vide
         }
     }
 
@@ -53,7 +55,7 @@ public class InventoryManagement : MonoBehaviour {
         hasFired = true;
     }
 
-    void OnToggleInventory() {
+    void OnToggleInventory() { // Bouger ça dans GUI.cs sinon y a trop de bloatware
         inInventory = !inInventory;
         inventoryCanvas.SetActive(inInventory);
     }
@@ -63,15 +65,15 @@ public class InventoryManagement : MonoBehaviour {
     }
 
     void Attack(Collider2D other) {
-        if(inInventory) {
+        if(inInventory) { // Si on est dans l'inventaire, empêcher toute action.
             return;
         }
 
-        if(other != null) {
+        if(other != null) { // Si on est bien dans un collider
             if(other.tag == "Resource") {
-                string type = DisplayResource.GetResTypeFromName(other);
+                string type = DisplayResource.GetResTypeFromName(other); // Voir dans DisplayResource script
                 float amount = ((float)GetResAmountFromName(other)) / 4.0f;
-                switch(type) {
+                switch(type) { // En fonction de la ressource, modifier une certaine partie de l'inventaire.
                     case "C":
                         inventory["coal"] += amount;
                         coalAmount.text = (Mathf.FloorToInt(inventory["coal"])).ToString();
@@ -90,7 +92,7 @@ public class InventoryManagement : MonoBehaviour {
                 }
             }
         } else {
-            // do stuff
+            // y a rien de prévu pour le moment mais on va faire une animation plus tard jsp quand
         }
     }
 

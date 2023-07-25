@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ResourceDisplayBobbing : MonoBehaviour {
 
+    // Ici BOBBING/bob = se déplacer de haut en bas
+
     public float minBobbing = -0.3f;
     public float maxBobbing = 0.3f;
 
@@ -18,30 +20,24 @@ public class ResourceDisplayBobbing : MonoBehaviour {
         Debug.Log("ResourceDisplayBobbing.cs successfully loaded!");
     }
 
-    // Update is called once per frame
-    void Update() {
-        
-    }
-
     void LateUpdate() {
-        if(gameObject.activeSelf) {
-            if(currentBobbing >= maxBobbing) {
+        if(gameObject.activeSelf) { // Est-ce qu'on est actif
+            if(currentBobbing >= maxBobbing) { // Est-ce qu'on a dépassé le plafond de BOBBING
                 bobbingDirection = -1.0f;
                 currentBobbing = maxBobbing;
-            } else if(currentBobbing <= minBobbing) {
+            } else if(currentBobbing <= minBobbing) { // Est-ce qu'on a dépassé le sol de BOBBING
                 bobbingDirection = 1.0f;
                 currentBobbing = minBobbing;
             }
 
-            if(counterBeforeNextBob >= maxCounter) {
+            if(counterBeforeNextBob >= maxCounter) { // si on a fini de compter pour le prochain bob
                 counterBeforeNextBob = 0;
                 currentBobbing += ( 0.1f * bobbingDirection );
                 transform.position += new Vector3(0f, 0.1f * bobbingDirection, 0f);
             } else {
-                counterBeforeNextBob += 1;
+                counterBeforeNextBob += 1; // On compte pour qu'on bob pas chaque frame
             }
-        } else {
-            counterBeforeNextBob = 0;
         }
+        // si on est pas actif on bob pas
     }
 }

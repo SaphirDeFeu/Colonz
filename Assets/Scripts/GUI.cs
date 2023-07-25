@@ -25,6 +25,8 @@ public class GUI : MonoBehaviour {
             guiScale = 1.0f;
         }
 
+        // Récuperer tous les objets Canvas spécifiés dans la liste
+        // puis mettre leur échelle à l'échelle sélectionné
         foreach(CanvasScaler scaler in canvasScalers) {
             scaler.scaleFactor = guiScale;
         }

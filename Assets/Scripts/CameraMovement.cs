@@ -21,12 +21,13 @@ public class CameraMovement : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         cameraFreeWalk.fieldOfView = defaultFOV;
-        loadText.text = "";
+        loadText.text = ""; // Une fois tout est chargé, on retire le Loading
         Debug.Log("CameraMovement.cs successfully loaded!");
     }
 
     // Update is called once per frame
     void LateUpdate() {
+        // On se place au dessus du joueur qu'on joue
         cameraFreeWalk.transform.position = new Vector3(CurrentPlayer.transform.position.x, CurrentPlayer.transform.position.y, cameraFreeWalk.transform.position.z);
         if(scrollInput.y > 0) {
             ZoomIn();
@@ -35,18 +36,18 @@ public class CameraMovement : MonoBehaviour {
         }
     }
 
-    void OnScrollWheel(InputValue value) {
+    void OnScrollWheel(InputValue value) { // Récupérer la valeur du scrolling
         scrollInput = value.Get<Vector2>();
     }
 
-    void ZoomIn() {
+    void ZoomIn() { // On modifie le FOV de la caméra pour zommer
         cameraFreeWalk.fieldOfView -= zoomSpeed;
         if (cameraFreeWalk.fieldOfView < minZoomFOV) {
             cameraFreeWalk.fieldOfView = minZoomFOV;
         }
     }
 
-    void ZoomOut() {
+    void ZoomOut() { // On modifie le FOV de la caméra pour dézoomer
         cameraFreeWalk.fieldOfView += zoomSpeed;
         if (cameraFreeWalk.fieldOfView > maxZoomFOV) {
             cameraFreeWalk.fieldOfView = maxZoomFOV;

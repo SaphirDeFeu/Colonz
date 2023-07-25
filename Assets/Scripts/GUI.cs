@@ -10,11 +10,30 @@ public class GUI : MonoBehaviour {
     public TextMeshProUGUI guiScaleText;
     public float guiScale = 1.0f;
 
+    public TextMeshProUGUI fpsText;
+
     public CanvasScaler[] canvasScalers; 
+
+    private int frameCount = 0;
+    private float elapsedTime = 0.0f;
+    private float updateRate = 1.0f;
 
     // Start is called before the first frame update
     void Start() {
         guiModifier.onClick.AddListener(OnClick);
+    }
+
+    void Update() {
+        // Calculer le framerate
+        frameCount++;
+        elapsedTime += Time.deltaTime;
+        if(elapsedTime >= updateRate) {
+            float fps = frameCount / elapsedTime;
+            fpsText.text = "FPS: " + Mathf.RoundToInt(fps);
+
+            elapsedTime = 0.0f;
+            frameCount = 0;
+        }
     }
 
     void OnClick() {

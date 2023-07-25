@@ -59,9 +59,9 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
         
-        if(canGo) {
+        if(canGo && !InventoryManagement.isInInventory(gameObject)) {
             rb.MovePosition(rb.transform.position + ( ( new Vector3(movement.x, movement.y, 0) ).normalized * speed * Time.deltaTime ) );
-        } else {
+        } else if(!canGo) {
             transform.position = currentPosBeforeEnter;
         }
 

@@ -11,6 +11,10 @@ public class InventoryManagement : MonoBehaviour {
     public TextMeshProUGUI ironAmount;
     public TextMeshProUGUI woodAmount;
 
+    public GameObject inventoryCanvas;
+
+    public bool inInventory = false;
+
     private bool hasFired = false;
     private Dictionary<string, float> inventory = new Dictionary<string, float>();
 
@@ -49,11 +53,20 @@ public class InventoryManagement : MonoBehaviour {
         hasFired = true;
     }
 
+    void OnToggleInventory() {
+        inInventory = !inInventory;
+        inventoryCanvas.SetActive(inInventory);
+    }
+
     void LateUpdate() {
         hasFired = false;
     }
 
     void Attack(Collider2D other) {
+        if(inInventory) {
+            return;
+        }
+
         if(other != null) {
             if(other.tag == "Resource") {
                 string type = DisplayResource.GetResTypeFromName(other);
@@ -96,4 +109,11 @@ public class InventoryManagement : MonoBehaviour {
 
         return 0;
     } 
+
+    public static bool isInInventory(GameObject gameObject) {
+        if((gameObject.name).StartsWith("Player")) {
+            return gameObject.GetComponent<InventoryManagement>().inInventory;
+        }
+        return false;
+    }
 }

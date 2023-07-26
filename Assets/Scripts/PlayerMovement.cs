@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour {
     public Rigidbody2D rb;
     public float speed = 12f;
     public bool hasBoat = false;
+    public GameObject ourBoat;
     public Vector3 spawnpoint = new Vector3(0f, 0f, 0f);
 
     public static Collider2D colliderCurrentlyIn;
@@ -23,6 +24,7 @@ public class PlayerMovement : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         transform.position = spawnpoint;
+        ourBoat.SetActive(false); // on suppose qu'on spawn pas dans l'océan
         Debug.Log("PlayerMovement.cs successfully loaded!");
     }
 
@@ -77,6 +79,8 @@ public class PlayerMovement : MonoBehaviour {
                 if(!hasBoat) { // et qu'on a pas de bateau
                     canGo = false; // on ne peut pas passer <shrug>
                     canForbidCounterCount = true;
+                } else {
+                    ourBoat.SetActive(true); // montrer le bateau
                 }
                 break;
         }
@@ -90,6 +94,7 @@ public class PlayerMovement : MonoBehaviour {
         switch(other.tag) {
             case "NeedsBoat": // c'est un océan qu'on a quitté?
                 canGo = true; // si oui yay
+                ourBoat.SetActive(false); // on a plus besoin du bateau
                 break;
         }
     }

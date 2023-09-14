@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NeedsBoat
   - Resource
+  - Province
   layers:
   - Default
   - TransparentFX
